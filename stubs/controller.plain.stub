@@ -1,0 +1,65 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+
+class {{ class }} extends Controller
+{
+    protected $files = [
+        'index' => 'Investor/StockTransactions/Index',
+        'create' => 'Investor/StockTransactions/Create',
+        'show' => 'Investor/StockTransactions/Show',
+
+    ];
+
+    protected $routes = [
+        'index' => 'investors.stockTransactions.index',
+    ];
+
+    public function index()
+    {
+        //
+        return Inertia::render($this->files['index'], compact('')); 
+    }
+
+    public function create(){
+
+        return Inertia::render($this->files['create'], compact());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ storeRequest }} $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+}

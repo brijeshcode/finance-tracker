@@ -1,0 +1,83 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ namespacedModel }};
+use {{ rootNamespace }}Http\Controllers\Controller;
+use {{ namespacedRequests }}
+use Inertia\Inertia;
+
+class {{ class }} extends Controller
+{
+    protected $files = [
+        'index' => 'Investor/{{ model }}/Index',
+        'create' => 'Investor/{{ model }}/Create',
+        'show' => 'Investor/{{ model }}/Show',
+
+    ];
+
+     protected $routes = [
+        'index' => 'investors.stockTransactions.index',
+    ];
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        return Inertia::render($this->files['index'], compact('')); 
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+        return Inertia::render($this->files['create'], compact());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ storeRequest }} $request)
+    {
+        //
+        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', '{{ model }} Added Successfully !!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ model }} ${{ modelVariable }})
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit({{ model }} ${{ modelVariable }})
+    {
+        //
+        return Inertia::render($this->files['create'], compact('{{ modelVariable}}'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ updateRequest }} $request, {{ model }} ${{ modelVariable }})
+    {
+        //
+        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', '{{ model }} Updated Successfully !!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ model }} ${{ modelVariable }})
+    {
+        //
+        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', '{{ model }} deleted successfully !!');
+    }
+}
