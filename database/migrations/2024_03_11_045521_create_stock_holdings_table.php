@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('stock_transaction_id'); 
+            $table->unsignedBigInteger('platform_id'); 
             $table->unsignedBigInteger('stock_id'); 
+            $table->unsignedBigInteger('stock_transaction_id'); 
+            
             
             $table->string('quantity', 20);
             $table->string('rate', 20);
@@ -41,6 +43,7 @@ return new class extends Migration
 
 
             $table->index('user_id');
+            $table->index('platform_id');
             $table->index('stock_transaction_id');
             $table->index('sold_out');
             $table->index('long_termed'); 

@@ -26,15 +26,13 @@ const menuItems = ref([
     {
         title: 'Dashboard' , permission: '' , role: '', route: 'dashboard', active_routes: ['dashboard'],
     },
-     {
-        title: 'Stock Holdings' , permission: '' , role: '', route: 'investors.stocks.holdings', active_routes: ['investors.stockTransactions.holdings']
-    },
     {
         title: 'Stocks' , permission: '', role: '',
         subMenu:[
-            { title:'Holdins', route: 'investors.stockTransactions.index', permission: '' },
-            { title:'Add Transactions', route: 'investors.stockTransactions.create', permission: '' },
-            { title:'Transactions History', route: 'investors.stockTransactions.index', permission: '' }
+            { title:'Portfolio', route: 'investors.stocks.portfolio', permission: '' },
+            { title:'Holdings', route: 'investors.stocks.holdings', permission: '' },
+            // { title:'Add Transactions', route: 'investors.stockTransactions.create', permission: '' },
+            { title:'Transactions', route: 'investors.stockTransactions.index', permission: '' }
         ]
     } 
 ]);  

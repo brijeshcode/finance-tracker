@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\Investor\PlatofromController;
+use App\Http\Controllers\API\Investor\PlatformController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     Route::name('investors.')->prefix('investor/')->group(function () { 
 
-        Route::get('platofroms', [PlatofromController::class, 'platfroms'])->name('platfroms');
+        Route::get('platofroms', [PlatformController::class, 'platfroms'])->name('platfroms');
+        Route::get('stocks', [PlatformController::class, 'stocks'])->name('stocks');
 
     })->middleware(['role_or_permission:investor']);
 

@@ -46,9 +46,9 @@
     })
 
     function submit() {
-       /*  form.post(route('admin.trades.addclient'), {
+        form.post(route('investors.platform.store'), {
             onSuccess: () => { form.reset() ; close();} ,
-        }); */
+        });
     }
 
 

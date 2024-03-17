@@ -10,6 +10,7 @@ use App\Http\Requests\Investor\StockTransactionStoreRequest;
 use App\Http\Requests\Investor\StockTransactionUpdateRequest;
 use App\Models\Admin\Stock;
 use App\Models\Investors\StockTransaction;
+use Illuminate\Support\Facades\DB;
 
 class StockTransactionController extends Controller
 {
@@ -64,19 +65,33 @@ class StockTransactionController extends Controller
          return Inertia::render($this->files['index'], compact('stockTransaction')); 
      }
 
-    public function create(){
+    
+     public function create(){
         $platforms = Platform::get(['id', 'name']);
         $stocks = Stock::active()->get(['id', 'name']);
         $reinvestmentLables = ['dividend', 'capital gains'];
         return Inertia::render($this->files['create'], compact('platforms', 'stocks', 'reinvestmentLables'));
     }
 
-    public function store(StockTransactionStoreRequest $request){ 
-        $data = $request->only('date', 'user_id', 'stock_id', 'platform_id', 'exchange', 'quantity', 'rate', 'price', 'is_buy', 'transaciton_charge',  'note');
+    public function store(StockTransactionStoreRequest $request){
+
+        $data = $request->only('date', 'stock_id', 'platform_id', 'exchange', 'quantity', 'rate', 'price', 'is_buy', 'transaciton_charge',  'note');
         $data['user_id'] = auth()->user()->id;
         $data['price'] = $data['rate'] * $data['quantity'];
-        StockTransaction::create($data);
-        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', 'Stock Transaction Added Successfully !!');
+        
+        try {
+            DB::beginTransaction();
+            StockTransaction::create($data);
+            DB::commit();
+            return redirect()->back()->with('type', 'success')->with('message', 'Stock Transaction Added Successfully !!');
+        }catch (\Exception $e) {
+         
+            DB::rollback();
+            info('Stock transaction controller create ERROR');
+            info($e->getMessage());
+
+            return redirect()->back()->with('type', 'fail')->with('message', $e->getMessage());
+        }
     }
 
 
@@ -92,8 +107,18 @@ class StockTransactionController extends Controller
         $data = $request->only('date', 'stock_id', 'platform_id', 'exchange', 'quantity', 'rate', 'price', 'is_buy', 'transaciton_charge',  'note');
         $data['price'] = $data['rate'] * $data['quantity'];
 
-        $stockTransaction->update($data);
-        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', 'Stock Transaction Updated Successfully !!');
+        try {
+            DB::beginTransaction();
+            $stockTransaction->update($data);
+            DB::commit();
+            return redirect()->back()->with('type', 'success')->with('message', 'Stock Transaction Updated Successfully !!');
+        }catch (\Exception $e) {
+         
+            DB::rollback();
+            info('Stock transaction controller update fail');
+            info($e->getMessage());
+            return redirect()->back()->with('type', 'fail')->with('message', $e->getMessage());
+        }
     }
     
     public function destroy(StockTransaction $stockTransaction){

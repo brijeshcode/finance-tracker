@@ -4,11 +4,12 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\Admin\DashboardController; 
-use App\Http\Controllers\Admin\AdvanceSetups\RoleController;
-use App\Http\Controllers\Admin\AdvanceSetups\UserController;
-use App\Http\Controllers\Admin\Setup\MutualFundController;
 use App\Http\Controllers\Admin\Setup\StockController;
 use App\Http\Controllers\Investor\StockHoldingController;
+use App\Http\Controllers\Admin\Setup\MutualFundController;
+use App\Http\Controllers\Admin\AdvanceSetups\RoleController;
+use App\Http\Controllers\Admin\AdvanceSetups\UserController;
+use App\Http\Controllers\Investor\InvestorPlatformController;
 use App\Http\Controllers\Investor\StockTransactionController;
 
 /*
@@ -58,10 +59,12 @@ Route::middleware([
     });
 
     Route::name('investors.')->prefix('investor/')->group(function () { 
+        
+        Route::post('platforms', [InvestorPlatformController::class, 'store'])->name('platform.store');
+
         Route::name('stocks.')->prefix('stock/')->group(function () { 
-
-            Route::get('holdings', [StockHoldingController::class, 'holdings'])->name('holdings');
-
+            Route::get('/', [StockHoldingController::class, 'portfolio'])->name('portfolio'); 
+            Route::get('holdings', [StockHoldingController::class, 'holdings'])->name('holdings'); 
         });
 
         Route::resource('stockTransactions', StockTransactionController::class)->except('show');

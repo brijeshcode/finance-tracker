@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Investors\StockTransaction;
+use App\Observers\Investor\StockTransactionObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         ],
     ];
 
+    protected $observers = [
+        StockTransaction::class => [StockTransactionObserver::class],
+    ];
     /**
      * Register any events for your application.
      */

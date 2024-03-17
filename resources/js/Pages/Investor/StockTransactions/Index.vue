@@ -8,7 +8,7 @@
 defineProps({
     stockTransactions: {type: Object}
 });
-const breadcrums = [ {name: 'Transactions' , route: 'investors.stockTransactions.index'} ];
+const breadcrums = [ {name: 'Stocks' , route: 'investors.stocks.holdings'}, {name: 'Transactions' , route: 'investors.stockTransactions.index'} ];
 const table_actions = [ 
     { type:'edit', route: 'investors.stockTransactions.edit', key: 'id' },
     { type:'delete', route: 'investors.stockTransactions.destory', key: 'id' },
@@ -24,7 +24,7 @@ const actionsLinks = [
     <app-layout title="Stock Transactions" :breadcrums="breadcrums" :actionsLinks="actionsLinks">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Stock Transactions History
+                Transactions
             </h2>
         </template>
 

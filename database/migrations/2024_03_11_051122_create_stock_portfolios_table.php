@@ -22,7 +22,7 @@ return new class extends Migration
             // avg_rate * quantity
             $table->string('invested_value', 20);
 
-            $table->integer('long_term_quantities')->default(0);
+            $table->integer('long_term_quantities')->default(0); // quantites which have been completed 365 days
             
 
             $table->text('note')->nullable(); 
