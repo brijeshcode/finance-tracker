@@ -17,12 +17,13 @@ return new class extends Migration
             $table->unsignedBigInteger('stock_id'); 
             
             $table->string('quantity', 20);
-            $table->string('running_avg_rate', 20);
+            $table->string('avg_rate', 20);
             
             // avg_rate * quantity
             $table->string('invested_value', 20);
 
             $table->integer('long_term_quantities')->default(0); // quantites which have been completed 365 days
+            $table->integer('total_divident_earns')->default(0); // quantites which have been completed 365 days
             
 
             $table->text('note')->nullable(); 

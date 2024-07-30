@@ -32,7 +32,7 @@ const menuItems = ref([
             { title:'Portfolio', route: 'investors.stocks.portfolio', permission: '' },
             { title:'Holdings', route: 'investors.stocks.holdings', permission: '' },
             // { title:'Add Transactions', route: 'investors.stockTransactions.create', permission: '' },
-            { title:'Transactions', route: 'investors.stockTransactions.index', permission: '' }
+            // { title:'Transactions', route: 'investors.stockTransactions.index', permission: '' }
         ]
     } 
 ]);  

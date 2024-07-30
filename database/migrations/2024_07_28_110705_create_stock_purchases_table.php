@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_sales', function (Blueprint $table) {
+        Schema::create('stock_purchases', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('user_id');
@@ -22,10 +22,13 @@ return new class extends Migration
             $table->string('rate', 20)->default(0);
             $table->string('price', 20)->default(0);  
             
-            $table->string('net_profit', 20)->default(0);
             $table->string('transaction_fee', 20)->default(0);  
             
-            
+            $table->unsignedBigInteger('sale_id')->nullable();
+            $table->string('sale_rate', 20)->nullable();
+            $table->string('partial_sale_quantity')->default(0);
+            $table->string('profit_on_sale')->default(0);
+            $table->string('age_days')->default(0);
 
             $table->text('note')->nullable(); 
 
@@ -44,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_sales');
+        Schema::dropIfExists('stock_purchases');
     }
 };

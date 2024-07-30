@@ -2,6 +2,7 @@
 
 namespace App\Models\Investors;
 
+use App\Models\Admin\Platform;
 use App\Models\User;
 use App\Models\Admin\Stock;
 use Illuminate\Database\Eloquent\Model;
@@ -14,24 +15,31 @@ class StockSale extends Model
 {
     use SoftDeletes;
     use HasFactory;
+    
+    protected $fillable = ['date', 'platform_id', 'user_id', 'stock_id', 'quantity', 'rate', 'price', 'net_profit', 'transaction_fee', 'note' ];
 
+    protected $casts = [
+        'quantity' => 'integer',
+        'rate' => 'float',
+        'price' => 'float',
+        'net_profit' => 'float',
+        'transaction_fee' => 'float',
 
-    protected $fillable = ['date', 'stock_transaction_id', 'stock_holding_id', 'user_id', 'stock_id', 'quantity',
-            'rate', 'price', 'net_profit', 'note' ];
+    ];
 
     public function stock(): BelongsTo
     {
         return $this->belongsTo(Stock::class);
     }
 
-    public function stock_transaction(): BelongsTo
-    {
-        return $this->belongsTo(StockTransaction::class);
-    }
-
     public function investor(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function platform(): BelongsTo
+    {
+        return $this->belongsTo(Platform::class);
     }
 
     public function scopeDate(Builder $query, string $date): void

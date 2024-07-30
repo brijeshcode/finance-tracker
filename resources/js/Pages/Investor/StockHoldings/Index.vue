@@ -2,23 +2,37 @@
 import AppLayout from '@/Layouts/Investor/Layout.vue';
 import AddStockBrocker from '@/Components/Investors/AddStockBrockers.vue';
 import AddStock from '@/Components/Investors/AddStockTransaction.vue';
+import SellStock from '@/Components/Investors/SellStockModel.vue';
 import { reactive, ref } from 'vue';
 
 const props = defineProps({
     investorPlatforms: {type: Array, default: [] },
     holdings: {type: Object, default: {} }
-})
+});
+
 const showBrockerModal = ref(false);
 const showAddStock = ref(false);
+const showSellStock = ref(false);
+const selectedStockQuantity = ref(0);
 const selectedPlatform = ref(null);
 const selectedStockId = ref(null);
 // const selectedPlatform = ref({ id: 3, name: 'zerodha'});
 
+
 const popAddStockModel = (platform, stock_id = null) => {
+
     selectedPlatform.value = platform; 
     selectedStockId.value = stock_id; 
     showAddStock.value = true;
 }
+
+const popShowSellStock = (platform, stock_id = null, quantity = 0) => {
+    selectedPlatform.value = platform; 
+    selectedStockId.value = stock_id; 
+    selectedStockQuantity.value = quantity;
+    showSellStock.value = true;
+}
+
 </script>
 
 <template>
@@ -40,7 +54,7 @@ const popAddStockModel = (platform, stock_id = null) => {
                     <section title="holdings"
                         class=" text-black p-4 w-full"
                     > 
-                        <div class="brockes mt-4 grid grid-cols-3 gap-4">
+                        <div class="brockes mt-4 grid grid-cols-2 gap-4">
                             <div v-for="broker in investorPlatforms" :key="broker.id" class="p-2 bg-gray-50 rounded border shadow-sm">
                                 <div class="font-bold capitalize py-2 border-b flex justify-between"> 
                                     {{ broker.platform.name }}
@@ -52,8 +66,8 @@ const popAddStockModel = (platform, stock_id = null) => {
                                         <th>Stock</th>
                                         <th>Qty.</th>
                                         <th>Avg. Rate</th>
-                                        <th>Value</th> 
-                                        <th>Act.</th> 
+                                        <th>Value</th>
+                                        <th>Act.</th>
                                     </thead>
                                     <tbody >
                                         <tr v-for="stock in holdings[broker.platform.id]" :key="stock" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
@@ -62,7 +76,11 @@ const popAddStockModel = (platform, stock_id = null) => {
                                             <td>{{ stock.rate }}</td>
                                             <td>{{ stock.price }}</td>
                                             <td>
-                                                <span  @click="popAddStockModel(broker.platform, stock.stock_id)" >B</span> | S | D | T</td>
+                                                <span  @click="popAddStockModel(broker.platform, stock.stock_id)" class="cursor-pointer" >B</span> | 
+                                                <span  @click="popShowSellStock(broker.platform, stock.stock_id, stock.quantity)" class="cursor-pointer" >S</span> |
+                                                D | 
+                                                T
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -81,5 +99,6 @@ const popAddStockModel = (platform, stock_id = null) => {
 
         <add-stock-brocker :show="showBrockerModal" @close="showBrockerModal = false"></add-stock-brocker>
         <Add-Stock :show="showAddStock" :selectedPlatform="selectedPlatform" :selectedStockId="selectedStockId" @close="showAddStock = false"></Add-Stock>
+        <sell-stock :show="showSellStock" :selectedPlatform="selectedPlatform" :selectedStockId="selectedStockId" :maxSellQuantity="selectedStockQuantity" @close="showSellStock = false"></sell-stock>
     </AppLayout>
 </template>

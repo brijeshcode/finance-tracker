@@ -23,11 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::middleware('auth:sanctum')->name('api.')->group(function () {
     Route::name('api.')->group(function () {
 
-    Route::name('investors.')->prefix('investor/')->group(function () { 
+        Route::name('investors.')->prefix('investor/')->group(function () { 
 
-        Route::get('platofroms', [PlatformController::class, 'platfroms'])->name('platfroms');
-        Route::get('stocks', [PlatformController::class, 'stocks'])->name('stocks');
+            Route::get('platofroms', [PlatformController::class, 'platfroms'])->name('platfroms');
+            Route::get('stocks', [PlatformController::class, 'stocks'])->name('stocks');
+            Route::get('getuser-quantity/{platformId}/{stockId}', [PlatformController::class, 'userStockQuantity'])->name('get_user_quantity');
 
-    })->middleware(['role_or_permission:investor']);
+        })->middleware(['role_or_permission:investor']);
 
-});
+    });

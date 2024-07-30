@@ -14,7 +14,7 @@ class StockPortfolio extends Model
     use SoftDeletes;
     use HasFactory;
 
-    protected $fillable = ['user_id', 'stock_id', 'quantity', 'running_avg_rate', 'invested_value', 'long_term_quantities', 'note' ];
+    protected $fillable = ['user_id', 'stock_id', 'quantity', 'avg_rate', 'invested_value', 'long_term_quantities', 'total_divident_earns', 'note' ];
 
     public function stock(): BelongsTo
     {

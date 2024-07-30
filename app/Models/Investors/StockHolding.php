@@ -36,10 +36,6 @@ class StockHolding extends Model
         return $this->belongsTo(Platform::class);
     }
 
-    public function stock_transaction(): BelongsTo
-    {
-        return $this->belongsTo(StockTransaction::class);
-    }
 
     public function investor(): BelongsTo
     {
@@ -59,6 +55,11 @@ class StockHolding extends Model
     public function scopeIsStock(Builder $query, int $stockId): void
     {
         $query->where('stock_id', $stockId);
+    }
+
+    public function scopeIsPlatform(Builder $query, int $platformId): void
+    {
+        $query->where('platform_id', $platformId);
     }
 
     public function scopeIsNote(Builder $query, string $note): void

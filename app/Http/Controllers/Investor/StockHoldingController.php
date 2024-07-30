@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Investors\InvestorPlatform;
 use App\Models\Investors\StockHolding;
 use App\Models\Investors\StockPortfolio;
+use App\Models\Investors\StockPurchase;
+use App\Models\Investors\StockSale;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -26,10 +28,24 @@ class StockHoldingController extends Controller
 
     public function portfolio()
     {
-        $portfolio = StockPortfolio::where('user_id', auth()->user()->id)->with('stock:id,name')->get([ 'stock_id', 'quantity', 'running_avg_rate', 'invested_value']);
-        $totalInvesteValue = $portfolio->sum('invested_value');
-        $stockCount = $portfolio->count('stock_id');
-        return Inertia::render($this->files['portfolio'], compact('portfolio', 'totalInvesteValue', 'stockCount')); 
+        $investor = auth()->user(); 
+        $purchases = StockPurchase::user($investor->id)->CurrentStock()->includePartial()->with('stock:id,name,symbol')->get([
+            'user_id', 'stock_id', 'quantity', 'rate', 'price', 'sale_id', 'partial_sale_quantity', 'profit_on_sale'
+        ])->groupBy('stock_id');
+        $portfolio =  $purchases->map(function ($stock, $stockId) { 
+            return [
+                'stock_id' => $stockId,
+                'name' => $stock->first()->stock->name,
+                'symbol' => $stock->first()->stock->symbol,
+                'quantity' => $stock->sum('quantity') - $stock->sum('partial_sale_quantity'),
+                'price' => round($stock->sum('price'), 2),
+                'rate' => round($stock->avg('rate'), 2)
+            ];
+        });
+         
+        $totalInvesteValue = $portfolio->sum('price');
+        $companies = $portfolio->count('stock_id');
+        return Inertia::render($this->files['portfolio'], compact('portfolio', 'totalInvesteValue', 'companies')); 
     }
     
     /**
@@ -44,7 +60,70 @@ class StockHoldingController extends Controller
         return Inertia::render($this->files['holding'], compact('investorPlatforms', 'holdings')); 
     }
     
-    function holdingsByPlatform($userId){
+    public function holdingsByPlatform($investorId){
+
+        $purchases = StockPurchase::where('user_id', $investorId)->CurrentStock()->includePartial()->with('stock:id,name,symbol')->get()->groupBy('platform_id');
+        $purchaseData =  $purchases->map(function ($platformStocks, $platformId) {
+            return $platformStocks->groupBy('stock_id')->map(function ($stock, $stockId){
+                return [
+                    'stock_id' => $stockId,
+                    'name' => $stock->first()->stock->name,
+                    'symbol' => $stock->first()->stock->symbol,
+                    'quantity' => $stock->sum('quantity') - $stock->sum('partial_sale_quantity'),
+                    'price' => round($stock->sum('price'), 2),
+                    'rate' => round($stock->avg('rate'), 2)
+                ];
+            });
+        });
+        
+        return $purchaseData;
+    }
+
+    public function holdingsByPlatform1($investorId){
+        $purchases = StockPurchase::where('user_id', $investorId)->with('stock:id,name,symbol')->get()->groupBy('platform_id');
+        $sales = StockSale::where('user_id', $investorId)->get()->groupBy('platform_id');
+        $purchaseData =  $purchases->map(function ($platformStocks, $platformId) {
+            return $platformStocks->groupBy('stock_id')->map(function ($stock, $stockId){
+                return [
+                    'stock_id' => $stockId,
+                    'name' => $stock->first()->stock->name,
+                    'symbol' => $stock->first()->stock->symbol,
+                    'quantity' => $stock->sum('quantity'),
+                    'price' => round($stock->sum('price'), 2),
+                    'rate' => round($stock->avg('rate'), 2)
+                ];
+            });
+        });
+        
+         
+
+        $saleData = $sales->map(function ($platformStocks, $platformId) {
+            return $platformStocks->groupBy('stock_id')->map(function ($stock, $stockId){
+                return [
+                    'stock_id' => $stockId,
+                    'name' => $stock->first()->stock->name,
+                    'symbol' => $stock->first()->stock->symbol,
+                    'quantity' => $stock->sum('quantity'),
+                    'price' => round($stock->sum('price'), 2),
+                    'rate' => round($stock->avg('rate'), 2)
+                ];
+            });
+        });
+
+        $holdings = array();
+        foreach($purchaseData as $platformId => $platforms){
+            $holdings[$platformId] = $platforms->toArray();
+            foreach($platforms as $stockId => $stock ){
+                if(isset($saleData[$platformId]) && isset($saleData[$platformId][$stockId])) {
+                    $holdings[$platformId][$stockId]['quantity'] -= $saleData[$platformId][$stockId]['quantity']; 
+                }
+            }
+        }
+        return $holdings;
+
+    }
+
+    private function holdingsByPlatformOld($userId){
         $stockHoldings = StockHolding::with('stock:id,name,symbol')->user($userId)->get()->groupBy('platform_id');
         return $stockHoldings->map(function ($platformStocks, $platformId) {
             // return [$platformStocks, $platform_id];
@@ -59,57 +138,5 @@ class StockHoldingController extends Controller
                 ];
             });
         });
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-        return Inertia::render($this->files['create']);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', 'StockHolding Added Successfully !!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(StockHolding $stockHolding)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(StockHolding $stockHolding)
-    {
-        //
-        return Inertia::render($this->files['create'], compact('{{ modelVariable}}'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, StockHolding $stockHolding)
-    {
-        //
-        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', 'StockHolding Updated Successfully !!');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(StockHolding $stockHolding)
-    {
-        //
-        return redirect(route($this->routes['index']))->with('type', 'success')->with('message', 'StockHolding deleted successfully !!');
     }
 }

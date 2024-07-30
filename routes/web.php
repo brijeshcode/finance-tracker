@@ -10,7 +10,10 @@ use App\Http\Controllers\Admin\Setup\MutualFundController;
 use App\Http\Controllers\Admin\AdvanceSetups\RoleController;
 use App\Http\Controllers\Admin\AdvanceSetups\UserController;
 use App\Http\Controllers\Investor\InvestorPlatformController;
-use App\Http\Controllers\Investor\StockTransactionController;
+use App\Http\Controllers\Investor\StockPurchaseController;
+use App\Http\Controllers\Investor\StockSalesController;
+
+// use App\Http\Controllers\Investor\StockTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,9 +68,11 @@ Route::middleware([
         Route::name('stocks.')->prefix('stock/')->group(function () { 
             Route::get('/', [StockHoldingController::class, 'portfolio'])->name('portfolio'); 
             Route::get('holdings', [StockHoldingController::class, 'holdings'])->name('holdings'); 
+            Route::post('/purchase/store', [StockPurchaseController::class, 'store'])->name('purchase');
+            Route::post('/sell/store', [StockSalesController::class, 'store'])->name('sell');
         });
 
-        Route::resource('stockTransactions', StockTransactionController::class)->except('show');
+        // Route::resource('stockTransactions', StockTransactionController::class)->except('show');
     })->middleware(['role_or_permission:investor']);
     
 
