@@ -15,9 +15,9 @@ class PlatformSeeder extends Seeder
     {
         $platformType = [
             ['name' => 'Groww', 'platform_type_id' => 1],
-            ['name' => 'upstocks', 'platform_type_id' => 1],
-            ['name' => 'zerodha', 'platform_type_id' => 1],
-            ['name' => 'pnb', 'platform_type_id' => 2], 
+            ['name' => 'Upstocks', 'platform_type_id' => 1],
+            ['name' => 'Zerodha', 'platform_type_id' => 1],
+            ['name' => 'PNB', 'platform_type_id' => 2], 
         ];
 
         foreach ($platformType as $platform){

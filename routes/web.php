@@ -68,8 +68,8 @@ Route::middleware([
         Route::name('stocks.')->prefix('stock/')->group(function () { 
             Route::get('/', [StockHoldingController::class, 'portfolio'])->name('portfolio'); 
             Route::get('holdings', [StockHoldingController::class, 'holdings'])->name('holdings'); 
-            Route::post('/purchase/store', [StockPurchaseController::class, 'store'])->name('purchase');
-            Route::post('/sell/store', [StockSalesController::class, 'store'])->name('sell');
+            Route::post('/purchase', [StockPurchaseController::class, 'store'])->name('purchase');
+            Route::post('/sell', [StockSalesController::class, 'store'])->name('sell');
         });
 
         // Route::resource('stockTransactions', StockTransactionController::class)->except('show');

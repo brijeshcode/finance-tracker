@@ -47,8 +47,8 @@ const popShowSellStock = (platform, stock_id = null, quantity = 0) => {
             <div class="max-w-7xl mx-auto ">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <section title="Add brokers w-100" class="p-4">
-                        <label class="font-bold">Add your Brockers: </label> 
-                        <button class="px-2 py-1 bg-black text-white rounded" @click="showBrockerModal = true">Manage Stock brockers</button>
+                        <label class="font-bold">Add your Brokers: </label> 
+                        <button class="px-2 py-1 bg-black text-white rounded" @click="showBrockerModal = true">Manage Stock brokers</button>
                     </section>
 
                     <section title="holdings"
@@ -71,10 +71,10 @@ const popShowSellStock = (platform, stock_id = null, quantity = 0) => {
                                     </thead>
                                     <tbody >
                                         <tr v-for="stock in holdings[broker.platform.id]" :key="stock" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                            <td >{{ stock.symbol }}</td>
+                                            <td >{{ stock.stock.symbol }}</td>
                                             <td>{{ stock.quantity }}</td>
-                                            <td>{{ stock.rate }}</td>
-                                            <td>{{ stock.price }}</td>
+                                            <td>{{ stock.average_price }}</td>
+                                            <td>{{ stock.quantity * stock.average_price }}</td>
                                             <td>
                                                 <span  @click="popAddStockModel(broker.platform, stock.stock_id)" class="cursor-pointer" >B</span> | 
                                                 <span  @click="popShowSellStock(broker.platform, stock.stock_id, stock.quantity)" class="cursor-pointer" >S</span> |

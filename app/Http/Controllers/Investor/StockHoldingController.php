@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Investor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Investors\CurrentHolding;
 use App\Models\Investors\InvestorPlatform;
 use App\Models\Investors\StockHolding;
 use App\Models\Investors\StockPortfolio;
@@ -53,6 +54,7 @@ class StockHoldingController extends Controller
      */
     public function holdings()
     {
+
         $investor = auth()->user();
         $holdings = $this->holdingsByPlatform($investor->id);
         
@@ -60,8 +62,10 @@ class StockHoldingController extends Controller
         return Inertia::render($this->files['holding'], compact('investorPlatforms', 'holdings')); 
     }
     
-    public function holdingsByPlatform($investorId){
 
+    public function holdingsByPlatform($investorId){
+        $holding = CurrentHolding::where('user_id', $investorId)->with('stock:id,name,symbol', 'platform:id,name')->get()->groupBy('platform_id');
+        return $holding;
         $purchases = StockPurchase::where('user_id', $investorId)->CurrentStock()->includePartial()->with('stock:id,name,symbol')->get()->groupBy('platform_id');
         $purchaseData =  $purchases->map(function ($platformStocks, $platformId) {
             return $platformStocks->groupBy('stock_id')->map(function ($stock, $stockId){
