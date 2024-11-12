@@ -9,6 +9,7 @@ use Database\Seeders\Admin\PlatformSeeder;
 use Database\Seeders\Admin\InvestmentSeeder;
 use Database\Seeders\Admin\PlatformTypesSeeder;
 use Database\Seeders\Admin\InvestmentTypeSeeder;
+use Database\Seeders\Admin\InvestorPlatformSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,9 +37,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(PlatformTypesSeeder::class);
         $this->call(PlatformSeeder::class);
-        $this->call(StockSeeder::class);
-        // $this->call(InvestmentTypeSeeder::class);
-        // $this->call(InvestmentSeeder::class);
+        $this->call(InvestorPlatformSeeder::class);
+        
+        $this->call(StockSeeder::class); 
 
     }
 }
